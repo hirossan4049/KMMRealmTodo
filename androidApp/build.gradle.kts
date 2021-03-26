@@ -9,6 +9,8 @@ dependencies {
     implementation("com.google.android.material:material:1.2.1")
     implementation("androidx.appcompat:appcompat:1.2.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.2")
+
+    implementation("androidx.recyclerview:recyclerview:1.1.0")
 }
 
 repositories {
