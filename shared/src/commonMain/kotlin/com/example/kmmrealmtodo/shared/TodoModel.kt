@@ -8,6 +8,10 @@ class TodoModel private constructor() {
             repository.addTodo(title)
         }
 
+        fun deleteTodo(todo: Todo) {
+            repository.deleteTodo(todo)
+        }
+
         fun getAllTodo(): List<Todo> {
            return repository.todos()
         }

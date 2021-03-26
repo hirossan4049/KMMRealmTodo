@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kmmrealmtodo.shared.Greeting
+import com.example.kmmrealmtodo.shared.Todo
 import com.example.kmmrealmtodo.shared.TodoModel
 
 fun greet(): String {
@@ -22,14 +23,15 @@ class MainActivity : AppCompatActivity(), RecyclerViewHolder.ItemClickListener {
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
 
+    private lateinit var todos: List<Todo>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        val tv: TextView = findViewById(R.id.text_view)
         recyclerView = findViewById(R.id.recycleView)
-
-        viewAdapter = RecyclerAdapter(this, this, TodoModel.getAllTodo().reversed())
+        todos = TodoModel.getAllTodo().asReversed()
+        viewAdapter = RecyclerAdapter(this, this, todos)
         viewManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.apply {
             setHasFixedSize(true)
@@ -41,19 +43,18 @@ class MainActivity : AppCompatActivity(), RecyclerViewHolder.ItemClickListener {
         val btn: Button = findViewById(R.id.button)
         btn.setOnClickListener {
             TodoModel.addTodo(tf.text.toString())
-            viewAdapter.notifyDataSetChanged()
+            viewAdapter.notifyItemInserted(0);
+            recyclerView.smoothScrollToPosition(0);
+//            viewAdapter.notifyItemRangeChanged(1, todos.size)
+//            viewAdapter.notifyDataSetChanged()
             tf.text.clear()
-//            tf.clearFocus()
         }
-//        tv.text = greet()
 
-//        val todoRepository = TodoModel
-//
-        Log.d("test", "$TodoModel.getAllTodo()")
-//        tv.text = "$todo.title"
     }
 
     override fun onItemClick(view: View, position: Int) {
-        Toast.makeText(applicationContext, "$position tapped!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, "${TodoModel.todo2title(todos.get(position))} tapped!", Toast.LENGTH_SHORT).show()
+        TodoModel.deleteTodo(todos.get(position))
+        viewAdapter.notifyItemRemoved(position)
     }
 }
