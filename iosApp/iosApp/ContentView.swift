@@ -6,10 +6,10 @@ func greet() -> String {
 }
 
 struct TodoStruct: Identifiable {
-    var id: ObjectIdentifier
+    var id: Int
     var title: String
     
-    init(todo: Todo, id: ObjectIdentifier){
+    init(todo: Todo, id: Int){
         self.id = id
         self.title = todo.title
     }
@@ -17,6 +17,7 @@ struct TodoStruct: Identifiable {
 
 class TodoEventFetcher: ObservableObject {
     @Published var todos: [TodoStruct] = []
+    var todoModels: [Todo] = []
     let todoModel = TodoModel.Companion()
 
     
@@ -25,9 +26,14 @@ class TodoEventFetcher: ObservableObject {
     }
     
     func fetchTodo() {
-        for (index,item) in todoModel.getAllTodo().reversed().enumerated(){
+        todoModels = todoModel.getAllTodo().reversed()
+        for (index,item) in todoModels.enumerated(){
             self.todos.append(TodoStruct(todo: item, id: index))
         }
+    }
+    func updateTodo(){
+        todos = []
+        fetchTodo()
     }
 }
 
@@ -44,10 +50,7 @@ struct ContentView: View {
 //        self.updateTodo()
     }
 
-    private var sum: String {
-        todoModel.addTodo(title: "Afrojack")
-        return "\(todoModel.getAllTodo()[0].title)"
-    }
+
     var body: some View {
         HStack(spacing: 16.0){
             TextField("Add", text: $title)
@@ -58,21 +61,23 @@ struct ContentView: View {
         }
         .padding(.top, 16.0)
         
-        List(todoFetcher.$todos) { item in
-            Text(item.title)
+        List(todoFetcher.todos) git{ item in
+            TodoCell(title: item.title)
+                .onTapGesture {
+                    deleteTodo(index: item.id)
+                }
         }
     }
     
-    // FIXME
-    func updateTodo() {
-//        self.todos = []
-
+    func deleteTodo(index: Int) {
+        todoModel.deleteTodo(todo: todoFetcher.todoModels[index])
+        todoFetcher.updateTodo()
     }
 
     func addTodo() {
         todoModel.addTodo(title: title)
         self.title = ""
-//        updateTodo()
+        todoFetcher.updateTodo()
         print("追加しました, \(title)")
     }
 }
