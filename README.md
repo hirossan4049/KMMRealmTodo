@@ -10,7 +10,7 @@ ggrks
 
 ## License
 
-
+under the WTFPL.
 
 ## Contact
 
