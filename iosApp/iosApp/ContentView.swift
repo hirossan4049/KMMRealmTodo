@@ -6,10 +6,10 @@ func greet() -> String {
 }
 
 struct TodoStruct: Identifiable {
-    var id: Int
+    var id: ObjectIdentifier
     var title: String
     
-    init(todo: Todo, id: Int){
+    init(todo: Todo, id: ObjectIdentifier){
         self.id = id
         self.title = todo.title
     }
