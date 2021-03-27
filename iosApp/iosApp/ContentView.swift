@@ -61,7 +61,7 @@ struct ContentView: View {
         }
         .padding(.top, 16.0)
         
-        List(todoFetcher.todos) git{ item in
+        List(todoFetcher.todos) { item in
             TodoCell(title: item.title)
                 .onTapGesture {
                     deleteTodo(index: item.id)
